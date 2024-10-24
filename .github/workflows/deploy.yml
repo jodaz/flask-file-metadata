@@ -22,7 +22,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         script: |
           set -e
-          cd /var/www/flask-filemetadata
+          cd /var/www/flask-file-metadata
           git pull
           docker build -t flask-file-metadata .
           docker ps -q --filter "name=flask-filemetadata" | grep -q . && docker stop flask-filemetadata
