@@ -1,0 +1,30 @@
+name: Build prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Reason'
+        required: true
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    environment: production
+    steps:
+    - name: Build docker image
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        key: ${{ secrets.SSH_KEY }}
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        script: |
+          set -e
+          cd /var/www/flask-filemetadata
+          git pull
+          docker build -t flask-file-metadata .
+          docker ps -q --filter "name=flask-filemetadata" | grep -q . && docker stop flask-filemetadata
+          docker ps -aq --filter "name=flask-filemetadata" | grep -q . && docker rm flask-filemetadata
+          docker run -d -p 5780:5780 flask-filemetadata
