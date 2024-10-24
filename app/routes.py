@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, jsonify, flash
 
 # Create a Blueprint for the main routes
 main = Blueprint('main', __name__)
@@ -20,10 +20,11 @@ def upload_file():
     if file.filename == '':
         flash('No selected file')
         return redirect(request.url)
+    
+    file_info = {
+        'name': file.filename,
+        'type': file.content_type,
+        'size': len(file.read())
+    }
 
-    # Save the file or process it as needed
-    # For example, you can save it to a specific directory
-    # file.save(f'uploads/{file.filename}')
-
-    flash('File successfully uploaded')
-    return redirect(url_for('main.get_index'))
+    return jsonify(file_info), 200
