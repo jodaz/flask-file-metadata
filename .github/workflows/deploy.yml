@@ -27,4 +27,4 @@ jobs:
           docker build -t flask-filemetadata .
           docker ps -q --filter "name=flask-filemetadata" | grep -q . && docker stop flask-filemetadata
           docker ps -aq --filter "name=flask-filemetadata" | grep -q . && docker rm flask-filemetadata
-          docker run -d -p 5174:5174 flask-filemetadata
+          docker run -d -p 5175:5174 flask-filemetadata
